@@ -38,7 +38,6 @@ const App = () => {
     const [answers, setAnswers] = useState([]);
 
     if (nodes.length) {
-        console.log(nodes);
         const currentNode = nodes[0];
 
         const warnings = currentNode.responseOptions
@@ -46,11 +45,7 @@ const App = () => {
             .map(({ warning }) => warning);
 
         const warningsContent = warnings.length ? (
-            <ul className="text-red-600">
-                {warnings.map((warning, idx) => (
-                    <li key={idx}>{warning}</li>
-                ))}
-            </ul>
+            <p className="text-red-600">{warnings.join('; ')}</p>
         ) : null;
 
         const isNextButtonDisabled = currentNode.isResponseRequired && responses.length === 0;
@@ -78,14 +73,16 @@ const App = () => {
             setResponses(nextResponses);
         };
 
-        const handleClickNext = (e) => {
+        const handleSubmit = (e) => {
+            e.preventDefault();
+
             if (isNextButtonDisabled) {
                 return;
             }
 
             setAnswers([...answers, { node: currentNode, responses }]);
 
-            setNodes([...nodes.slice(1), ...filterCollection(currentNode.children, responses)]);
+            setNodes([...filterCollection(currentNode.children, responses), ...nodes.slice(1)]);
 
             setResponses([]);
         };
@@ -93,11 +90,11 @@ const App = () => {
         return (
             <div className="bg-white overflow-hidden shadow-md rounded-lg">
                 <div className="px-4 py-5 sm:px-6">
-                    <h2 className="text-2xl">Section</h2>
+                    <h2 className="text-2xl">{currentNode.title}</h2>
                 </div>
                 <div className="border-t border-b border-gray-200 px-4 py-5 sm:p-6 h-64">
                     <p className="text-xl mb-2">{currentNode.question}</p>
-                    <form>
+                    <form id="flowchart-form" onSubmit={handleSubmit}>
                         <ul className="">
                             {currentNode.responseOptions.map(({ value }) => {
                                 return (
@@ -131,13 +128,13 @@ const App = () => {
                 <div className="px-4 py-4 sm:px-6">
                     <div className="flex items-center">
                         <button
-                            type="button"
+                            type="submit"
+                            form="flowchart-form"
                             className={`py-2 px-4 text-sm leading-5 font-semibold rounded-md text-white bg-teal-400 focus:outline-none focus:shadow-outline-teal focus:border-teal-500 ${
                                 isNextButtonDisabled
                                     ? `disabled:opacity-50 disabled:cursor-not-allowed`
                                     : `hover:bg-teal-300 active:bg-teal-500 `
                             }`}
-                            onClick={handleClickNext}
                             disabled={isNextButtonDisabled}
                         >
                             Next
@@ -162,17 +159,29 @@ const App = () => {
     );
 
     const resultsContent = results.length ? (
-        <ul>
-            {results.map(({ value }, idx) => (
-                <li key={idx}>{value}</li>
+        <>
+            {results.map(({ title, data }, idx) => (
+                <div key={idx}>
+                    <h2 className="text-xl font-bold mb-3">{title}</h2>
+                    {data.map(({ heading, items }, idx) => (
+                        <div key={idx} className="mb-2">
+                            <h3 className="text-lg font-semibold">{heading}</h3>
+                            <ul>
+                                {items.map((item, idx) => (
+                                    <li key={idx}>{item}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
             ))}
-        </ul>
+        </>
     ) : null;
 
     return (
         <div className="bg-white overflow-hidden shadow-md rounded-lg">
             <div className="px-4 py-5 sm:px-6 flex items-center justify-between flex-wrap sm:flex-no-wrap">
-                <h2 className="text-2xl">Results</h2>
+                <h2 className="text-2xl">Standards of Reporting</h2>
                 <button
                     type="button"
                     className="py-2 px-4 text-sm leading-5 font-semibold rounded-md text-white bg-teal-400 focus:outline-none focus:shadow-outline-teal focus:border-teal-500 hover:bg-teal-300 active:bg-teal-500"

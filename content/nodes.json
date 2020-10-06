@@ -1,59 +1,154 @@
 [
     {
-        "question": "Did you drink alcohol today?",
+        "title": "VFSS",
+        "question": "Did the study use VFSS to measure outcomes?",
         "isResponseRequired": true,
         "isMultipleResponsesAllowed": false,
         "responseOptions": [
-            { "value": "Yes", "warning": "It's a slippery slope!" },
-            { "value": "No" }
+            {
+                "value": "Yes"
+            },
+            {
+                "value": "No",
+                "warning": "You should use VFSS!"
+            }
         ],
         "results": [
             {
-                "filter": "No",
-                "value": "Keep it up!"
+                "filter": "Yes",
+                "title": "VFSS",
+                "data": [
+                    {
+                        "heading": "Equipment",
+                        "items": ["Was frame rate reported?"]
+                    },
+                    {
+                        "heading": "Contrast Agent",
+                        "items": [
+                            "Were details about contrast agent conc. reported?",
+                            "Were details about contrast agent type reported?"
+                        ]
+                    },
+                    {
+                        "heading": "Bolus",
+                        "items": [
+                            "Was more than one bolus trialed?",
+                            "Was more than one consistency trialed?",
+                            "Were details about bolus delivery specified? (e.g. cup/straw)",
+                            "Was bolus volume specified?"
+                        ]
+                    },
+                    {
+                        "heading": "Method/Protocol",
+                        "items": [
+                            "Were swallowing parameters operationally defined?",
+                            "Was a standardized protocol used? (e.g. MBSImp/ASPEKT/DIGEST)",
+                            "Were raters blinded to participant ID/group assignment?"
+                        ]
+                    },
+                    {
+                        "heading": "Statistics",
+                        "items": [
+                            "Was intra-reliability reported?",
+                            "Was inter-reliability reported?"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "children": []
+    },
+    {
+        "title": "Instrumental Swallow Evaluation",
+        "question": "Are instrumental swallow evaluations used in the study?",
+        "isResponseRequired": true,
+        "isMultipleResponsesAllowed": false,
+        "responseOptions": [
+            {
+                "value": "Yes"
+            },
+            {
+                "value": "No",
+                "warning": ":("
+            }
+        ],
+        "results": [
+            {
+                "filter": "Yes",
+                "title": "Instrumental Swallow Evaluation",
+                "data": [
+                    {
+                        "heading": "Rater Competency",
+                        "items": ["Experience", "Training", "Number"]
+                    },
+                    {
+                        "heading": "Rating Process",
+                        "items": [
+                            "Time of rating relative to performing swallow evaluation",
+                            "Discrepancy process"
+                        ]
+                    },
+                    {
+                        "heading": "Swallowing tasks",
+                        "items": [
+                            "Bolus volume",
+                            "Bolus consistency?",
+                            "Presentation method",
+                            "Deviation from protocol "
+                        ]
+                    }
+                ]
             }
         ],
         "children": [
             {
                 "filter": "Yes",
-                "question": "How many drinks did you have?",
+                "title": "Instrumental Swallow Evaluation",
+                "question": "What instrumental swallow evaluation tool was used in the study?",
                 "isResponseRequired": true,
-                "isMultipleResponsesAllowed": false,
-                "responseOptions": [
-                    { "value": "1" },
-                    { "value": "< 5" },
-                    { "value": ">= 5", "warning": "You're an alcholic!" }
-                ],
+                "isMultipleResponsesAllowed": true,
+                "responseOptions": [{ "value": "MBS" }, { "value": "FEES" }],
                 "results": [
                     {
-                        "filter": "1",
-                        "value": "Cheers!"
+                        "filter": {
+                            "type": "every",
+                            "values": ["MBS"]
+                        },
+                        "title": "MBS",
+                        "data": [
+                            {
+                                "heading": "Use of optimized outcome metrics",
+                                "items": ["Assessment of oropharyngeal secretions"]
+                            },
+                            {
+                                "heading": "Swallowing tasks",
+                                "items": ["Use of dye or other coloring"]
+                            },
+                            {
+                                "heading": "Other modifiable factors for replication",
+                                "items": [
+                                    "Lubrication/anesthesia/decongestant application",
+                                    "Environmental conditions",
+                                    "Procedure for identification and reporting of incidental anatomical findings"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "filter": {
+                            "type": "every",
+                            "values": ["FEES"]
+                        },
+                        "title": "FEES",
+                        "data": [
+                            {
+                                "heading": "TODO",
+                                "items": ["Item #1", "Item #2"]
+                            }
+                        ]
                     }
                 ],
-                "children": [
-                    {
-                        "filter": "< 5",
-                        "question": "What types of drinks did you have?",
-                        "isResponseRequired": true,
-                        "isMultipleResponsesAllowed": true,
-                        "responseOptions": [
-                            { "value": "Beer" },
-                            { "value": "Cider" },
-                            { "value": "Wine", "warning": "Dude...man up!" },
-                            { "value": "Liquor" }
-                        ],
-                        "results": [
-                            {
-                                "filter": {
-                                    "type": "every",
-                                    "values": ["Beer", "Cider", "Wine"]
-                                },
-                                "value": "Do you live in the NSLC??"
-                            }
-                        ],
-                        "children": []
-                    }
-                ]
+                "children": []
             }
         ]
     }
