@@ -181,7 +181,7 @@ const App = () => {
     return (
         <div className="bg-white overflow-hidden shadow-md rounded-lg">
             <div className="px-4 py-5 sm:px-6 flex items-center justify-between flex-wrap sm:flex-no-wrap">
-                <h2 className="text-2xl">Standards of Reporting</h2>
+                <h2 className="text-2xl">Reporting Standards</h2>
                 <button
                     type="button"
                     className="py-2 px-4 text-sm leading-5 font-semibold rounded-md text-white bg-teal-400 focus:outline-none focus:shadow-outline-teal focus:border-teal-500 hover:bg-teal-300 active:bg-teal-500"
