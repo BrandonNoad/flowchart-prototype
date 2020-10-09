@@ -7,7 +7,10 @@ module.exports = {
         // removeDeprecatedGapUtilities: true,
         // purgeLayersByDefault: true,
     },
-    purge: ['./src/**/*.js'],
+    purge: {
+        mode: 'all',
+        content: ['./src/**/*.js'],
+    },
     theme: {
         extend: {
             fontFamily: {

@@ -1,14 +1,6 @@
 import React from 'react';
+import { Redirect } from '@reach/router';
 
-import Layout from '../components/Layout';
-import App from '../components/App';
-
-const IndexPage = () => {
-    return (
-        <Layout>
-            <App></App>
-        </Layout>
-    );
-};
+const IndexPage = () => <Redirect to="/app" noThrow />;
 
 export default IndexPage;
