@@ -3,7 +3,7 @@ import _isString from 'lodash/isString';
 import _intersection from 'lodash/intersection';
 import _difference from 'lodash/difference';
 
-import allNodes from '../../../content/nodes.json';
+import allNodes from '../../../content/v2.json';
 
 const FILTER_TYPE_SOME = 'some';
 
@@ -176,7 +176,9 @@ const App = () => {
                 </div>
             ))}
         </>
-    ) : null;
+    ) : (
+        <p>This tool is not appropriate for your study.</p>
+    );
 
     return (
         <div className="bg-white overflow-hidden shadow-md rounded-lg">

@@ -1,0 +1,156 @@
+[
+    {
+        "title": "",
+        "question": "Is this a study performed on human subjects investigating normal or disordered swallowing?​",
+        "isResponseRequired": true,
+        "isMultipleResponsesAllowed": false,
+        "responseOptions": [{ "value": "Yes" }, { "value": "No" }],
+        "results": [
+            {
+                "filter": "Yes",
+                "title": "Participant Questions",
+                "data": [
+                    {
+                        "heading": "TODO",
+                        "items": ["Question 1?", "Question 2?", "Question 3?"]
+                    }
+                ]
+            }
+        ],
+        "children": [
+            {
+                "filter": "Yes",
+                "title": "Instrumentation",
+                "question": "Does your study use instrumentation?​",
+                "isResponseRequired": true,
+                "isMultipleResponsesAllowed": false,
+                "responseOptions": [{ "value": "Yes" }, { "value": "No" }],
+                "results": [
+                    {
+                        "filter": "Yes",
+                        "title": "General Instrumentation Questions",
+                        "data": [
+                            {
+                                "heading": "TODO",
+                                "items": ["Question 1?", "Question 2?", "Question 3?"]
+                            }
+                        ]
+                    }
+                ],
+                "children": [
+                    {
+                        "filter": "Yes",
+                        "title": "Instrumentation",
+                        "question": "Select the types of instrumentation used in the study?​",
+                        "isResponseRequired": true,
+                        "isMultipleResponsesAllowed": true,
+                        "responseOptions": [
+                            { "value": "VFSS" },
+                            { "value": "FEES" },
+                            { "value": "Other sensor-based tool" },
+                            { "value": "Other imaging-based tool" }
+                        ],
+                        "results": [
+                            {
+                                "filter": { "type": "every", "values": ["VFSS"] },
+                                "title": "VFSS Questions",
+                                "data": [
+                                    {
+                                        "heading": "TODO",
+                                        "items": ["Question 1?", "Question 2?", "Question 3?"]
+                                    }
+                                ]
+                            },
+                            {
+                                "filter": { "type": "every", "values": ["FEES"] },
+                                "title": "FEES Questions",
+                                "data": [
+                                    {
+                                        "heading": "TODO",
+                                        "items": ["Question 1?", "Question 2?", "Question 3?"]
+                                    }
+                                ]
+                            },
+                            {
+                                "filter": {
+                                    "type": "every",
+                                    "values": ["Other sensor-based tool"]
+                                },
+                                "title": "Other Sensor-Based Instr. Questions",
+                                "data": [
+                                    {
+                                        "heading": "TODO",
+                                        "items": ["Question 1?", "Question 2?", "Question 3?"]
+                                    }
+                                ]
+                            },
+                            {
+                                "filter": {
+                                    "type": "every",
+                                    "values": ["Other imaging-based tool"]
+                                },
+                                "title": "Other Imaging-Based Instr. Questions",
+                                "data": [
+                                    {
+                                        "heading": "TODO",
+                                        "items": ["Question 1?", "Question 2?", "Question 3?"]
+                                    }
+                                ]
+                            }
+                        ],
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "filter": "Yes",
+                "title": "PROM",
+                "question": "Does your study use PROM?​",
+                "isResponseRequired": true,
+                "isMultipleResponsesAllowed": false,
+                "responseOptions": [{ "value": "Yes" }, { "value": "No" }],
+                "results": [
+                    {
+                        "filter": "Yes",
+                        "title": "PROM Questions",
+                        "data": [
+                            {
+                                "heading": "TODO",
+                                "items": ["Question 1?", "Question 2?", "Question 3?"]
+                            }
+                        ]
+                    }
+                ],
+                "children": []
+            },
+            {
+                "filter": "Yes",
+                "title": "Swallowing Type",
+                "question": "Does your study investigate a type of swallowing treatment?​​",
+                "isResponseRequired": true,
+                "isMultipleResponsesAllowed": false,
+                "responseOptions": [
+                    {
+                        "value": "Yes"
+                    },
+                    {
+                        "value": "No"
+                    }
+                ],
+                "results": [
+                    {
+                        "filter": "Yes",
+                        "title": "Treatment Questions",
+                        "data": [
+                            {
+                                "heading": "TODO",
+                                "items": ["Question 1?", "Question 2?", "Question 3?"]
+                            }
+                        ]
+                    }
+                ],
+                "children": []
+            }
+        ]
+    }
+]
