@@ -2,12 +2,12 @@ import React from 'react';
 import { Router, Redirect } from '@reach/router';
 
 import QuestionnaireBuilder from '../QuestionnaireBuilder';
-import Questionnaire from '../Questionnaire';
+import QuestionnaireContainer from '../QuestionnaireContainer';
 
 const App = () => (
     <Router basepath="/app">
         <QuestionnaireBuilder path="/" />
-        <Questionnaire path="/reporting-standards" />
+        <QuestionnaireContainer path="/reporting-standards" />
         <Redirect from="*" to="/app" noThrow />
     </Router>
 );

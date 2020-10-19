@@ -16,6 +16,11 @@ module.exports = {
             fontFamily: {
                 sans: ['Inter var', ...defaultTheme.fontFamily.sans],
             },
+            inset: {
+                0: 0,
+                auto: 'auto',
+                '1/2': '50%',
+            },
         },
     },
     variants: {

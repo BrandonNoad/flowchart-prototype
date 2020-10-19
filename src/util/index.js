@@ -1,4 +1,4 @@
-import _isString from 'lodash/isString';
+import _isInteger from 'lodash/isInteger';
 import _intersection from 'lodash/intersection';
 import _difference from 'lodash/difference';
 
@@ -12,7 +12,7 @@ export const filterCollection = (collection, responses) =>
             return true;
         }
 
-        if (_isString(item.filter)) {
+        if (_isInteger(item.filter)) {
             return responses.includes(item.filter);
         }
 
