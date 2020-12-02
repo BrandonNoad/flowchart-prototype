@@ -1,36 +1,30 @@
 import React, { useState, useEffect } from 'react';
 
 import { filterCollection } from '../../util';
-import allNodes from '../../data/nodes';
+import rootQuestion from '../../data/rootQuestion';
 
-const QuestionnaireBuilder = ({ navigate }) => {
-    const [nodes, setNodes] = useState(allNodes);
+const QuestionnaireBuilder = ({ setAnswersToConfigQuestions }) => {
+    const [questions, setQuestions] = useState([rootQuestion]);
 
     const [responses, setResponses] = useState([]);
 
     const [answers, setAnswers] = useState([]);
 
     useEffect(() => {
-        if (nodes.length === 0) {
-            const results = answers.flatMap(({ node, responses }) =>
-                filterCollection(node.results, responses)
-            );
-
-            navigate('/app/reporting-standards', { state: { results } });
+        if (questions.length === 0) {
+            setAnswersToConfigQuestions(answers);
         }
-    }, [nodes, answers, navigate]);
+    }, [questions, answers, setAnswersToConfigQuestions]);
 
-    if (nodes.length === 0) {
+    if (questions.length === 0) {
         return null;
     }
 
-    const currentNode = nodes[0];
+    const currentQuestion = questions[0];
 
-    const isNextButtonDisabled = currentNode.isResponseRequired && responses.length === 0;
+    const isNextButtonDisabled = currentQuestion.isResponseRequired && responses.length === 0;
 
     const handleChangeOptionFactory = (isMultipleResponsesAllowed) => (e) => {
-        e.persist();
-
         const toggledResponse = parseInt(e.target.value, 10);
 
         const isChecked = e.target.checked;
@@ -58,11 +52,14 @@ const QuestionnaireBuilder = ({ navigate }) => {
             return;
         }
 
-        const { children, ...currentNodeWithoutChildren } = currentNode;
+        const { questionGroups, ...currentQuestionWithoutQuestionGroups } = currentQuestion;
 
-        setAnswers([...answers, { node: currentNodeWithoutChildren, responses }]);
+        setAnswers([...answers, { question: currentQuestionWithoutQuestionGroups, responses }]);
 
-        setNodes([...filterCollection(children, responses), ...nodes.slice(1)]);
+        setQuestions([
+            ...filterCollection(questionGroups, responses).flatMap(({ questions }) => questions),
+            ...questions.slice(1),
+        ]);
 
         setResponses([]);
     };
@@ -73,33 +70,35 @@ const QuestionnaireBuilder = ({ navigate }) => {
                 <h2 className="text-2xl">Study Configuration</h2>
             </div>
             <div className="border-t border-b border-gray-200 px-4 py-5 sm:p-6 h-64">
-                <p className="text-xl mb-2">{currentNode.question}</p>
+                <p className="text-xl mb-2">{currentQuestion.question}</p>
                 <form id="flowchart-form" onSubmit={handleSubmit}>
                     <ul>
-                        {currentNode.responseOptions.map((responseOption, idx) => (
-                            <li className="mb-1" key={responseOption + idx}>
-                                <label className="flex items-center">
-                                    <input
-                                        type={
-                                            currentNode.isMultipleResponsesAllowed
-                                                ? 'checkbox'
-                                                : 'radio'
-                                        }
-                                        className={`form-${
-                                            currentNode.isMultipleResponsesAllowed
-                                                ? 'checkbox'
-                                                : 'radio'
-                                        } text-teal-400`}
-                                        value={idx}
-                                        checked={responses.includes(idx)}
-                                        onChange={handleChangeOptionFactory(
-                                            currentNode.isMultipleResponsesAllowed
-                                        )}
-                                    />
-                                    <span className="ml-2">{responseOption}</span>
-                                </label>
-                            </li>
-                        ))}
+                        {currentQuestion.responseOptions.map(
+                            (responseOption, responseOptionIndex) => (
+                                <li className="mb-1" key={responseOption + responseOptionIndex}>
+                                    <label className="flex items-center">
+                                        <input
+                                            type={
+                                                currentQuestion.isMultipleResponsesAllowed
+                                                    ? 'checkbox'
+                                                    : 'radio'
+                                            }
+                                            className={`form-${
+                                                currentQuestion.isMultipleResponsesAllowed
+                                                    ? 'checkbox'
+                                                    : 'radio'
+                                            } text-teal-400`}
+                                            value={responseOptionIndex}
+                                            checked={responses.includes(responseOptionIndex)}
+                                            onChange={handleChangeOptionFactory(
+                                                currentQuestion.isMultipleResponsesAllowed
+                                            )}
+                                        />
+                                        <span className="ml-2">{responseOption}</span>
+                                    </label>
+                                </li>
+                            )
+                        )}
                     </ul>
                 </form>
             </div>

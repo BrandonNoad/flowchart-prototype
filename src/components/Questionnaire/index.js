@@ -1,65 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-const Questionnaire = ({ questionGroups }) => {
-    const [activeQuestionGroup, setActiveQuestionGroup] = useState(null);
+import QuestionGroup from '../QuestionGroup';
+import { generateProgressDataForQuestionGroups } from '../../util';
 
-    const [answers, setAnswers] = useState(
-        questionGroups.reduce((acc, questionGroup) => {
-            return {
-                ...acc,
-                [questionGroup.id]: questionGroup.questions.map(() => undefined),
-            };
-        }, {})
-    );
+let isFileSaverSupported;
+try {
+    isFileSaverSupported = !!new Blob();
+} catch (e) {
+    isFileSaverSupported = false;
+}
 
-    if (!questionGroups.length) {
-        return (
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-                <div className="flex">
-                    <div className="flex-shrink-0">
-                        <svg
-                            className="h-5 w-5 text-yellow-400"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                    </div>
-                    <div className="ml-3">
-                        <p className="text-sm leading-5 text-yellow-700">
-                            This tool is not appropriate for the study.
-                        </p>
-                    </div>
-                </div>
-            </div>
+// const useInterval = (callback) => {
+//     const savedCallback = useRef();
+
+//     useEffect(() => {
+//         savedCallback.current = callback;
+//     });
+
+//     useEffect(() => {
+//         const tick = () => {
+//             savedCallback.current();
+//         };
+
+//         const intervalId = setInterval(tick, 1000 * 10);
+
+//         return () => clearInterval(intervalId);
+//     }, []);
+// };
+
+const Questionnaire = ({ questionnaireSections, responses, setResponses, onClickExport }) => {
+    const [activeQuestionnaireSection, setActiveQuestionnaireSection] = useState(null);
+
+    const [progressData, setProgressData] = useState({});
+
+    useEffect(() => {
+        setProgressData(
+            questionnaireSections.reduce((progressDataAcc, { id, questionGroups }) => {
+                return {
+                    ...progressDataAcc,
+                    [id]: generateProgressDataForQuestionGroups({ questionGroups, responses }),
+                };
+            }, {})
         );
-    }
+    }, [questionnaireSections]);
+
+    // useInterval(() => {
+    //     localStorage.setItem('responses', JSON.stringify(responses));
+    // });
 
     // -- Overview
-    if (activeQuestionGroup === null) {
+
+    if (activeQuestionnaireSection === null) {
         const content = (
             <ul>
-                {questionGroups.map((questionGroup, idx) => {
-                    const { id, title, questions } = questionGroup;
+                {questionnaireSections.map((questionnaireSection, idx) => {
+                    const { id, title } = questionnaireSection;
 
-                    const progress =
-                        questions.length === 0
+                    const progressForQuestionnaireSection =
+                        (progressData[id]?.numQuestions ?? 0) === 0
                             ? 100
-                            : (answers[id].filter((val) => val !== undefined).length /
-                                  questions.length) *
-                              100;
+                            : (progressData[id].numResponses / progressData[id].numQuestions) * 100;
 
-                    const isWarning = answers[id].filter((val) => val === 'No').length > 0;
+                    const isWarning = false; // answers[id].filter((val) => val === 'No').length > 0;
 
                     return (
                         <li key={id}>
                             <div
-                                onClick={() => setActiveQuestionGroup(questionGroup)}
+                                onClick={() => setActiveQuestionnaireSection(questionnaireSection)}
                                 className="hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out"
                                 style={{ cursor: 'pointer' }}
                             >
@@ -91,11 +98,12 @@ const Questionnaire = ({ questionGroups }) => {
                                                         clipRule="evenodd"
                                                     />
                                                 </svg>
-                                                {`${questions.length} ${
-                                                    questions.length === 1
-                                                        ? 'Question'
-                                                        : 'Questions'
-                                                }`}
+                                                {progressData[id] &&
+                                                    `${progressData[id].numQuestions} ${
+                                                        progressData[id].numQuestions === 1
+                                                            ? 'Question'
+                                                            : 'Questions'
+                                                    }`}
                                             </div>
                                         </div>
                                         <div className="mt-2" style={{ width: '300px' }}>
@@ -103,7 +111,9 @@ const Questionnaire = ({ questionGroups }) => {
                                                 <div className="w-full h-full bg-gray-200 absolute"></div>
                                                 <div
                                                     className="h-full bg-teal-400 absolute"
-                                                    style={{ width: `${progress}%` }}
+                                                    style={{
+                                                        width: `${progressForQuestionnaireSection}%`,
+                                                    }}
                                                 ></div>
                                             </div>
                                         </div>
@@ -120,56 +130,56 @@ const Questionnaire = ({ questionGroups }) => {
             <div className="bg-white overflow-hidden shadow-md rounded-lg">
                 <div className="px-4 py-5 sm:px-6 flex items-center justify-between flex-wrap sm:flex-no-wrap">
                     <h2 className="text-2xl">Reporting Standards</h2>
+                    {isFileSaverSupported && (
+                        <button
+                            type="button"
+                            onClick={onClickExport}
+                            className="py-2 px-4 text-sm leading-5 font-semibold rounded-md text-white bg-teal-400 focus:outline-none focus:shadow-outline-teal focus:border-teal-500 hover:bg-teal-300 active:bg-teal-500"
+                        >
+                            Export
+                        </button>
+                    )}
                 </div>
                 <div className="border-t border-gray-200">{content}</div>
             </div>
         );
     }
 
-    // -- Question Group Details
+    // -- Questionnaire Section View
 
-    const answerQuestion = (val, idx) => {
-        setAnswers({
-            ...answers,
-            [activeQuestionGroup.id]: [
-                ...answers[activeQuestionGroup.id].slice(0, idx),
-                val,
-                ...answers[activeQuestionGroup.id].slice(idx + 1),
-            ],
+    const handleClickBack = () => {
+        setProgressData({
+            ...progressData,
+            [activeQuestionnaireSection.id]: generateProgressDataForQuestionGroups({
+                questionGroups: activeQuestionnaireSection.questionGroups,
+                responses,
+            }),
         });
+
+        setActiveQuestionnaireSection(null);
     };
+
+    const respondToQuestion = (questionId, responsesForQuestion) =>
+        setResponses({
+            ...responses,
+            [questionId]: responsesForQuestion,
+        });
 
     const content = (
         <>
-            <h2 className="text-xl font-bold mb-2">{activeQuestionGroup.title}</h2>
+            <h2 className="text-xl font-bold mb-2">{activeQuestionnaireSection.title}</h2>
             <ol>
-                {activeQuestionGroup.questions.map((question, idx) => (
-                    <li key={idx} className="mb-2">
-                        <p className="text-lg mb-1">{question}</p>
-                        <label className="flex items-center mb-1">
-                            <input
-                                type="radio"
-                                name={`radio${activeQuestionGroup.id}-${idx}`}
-                                className="form-radio text-teal-400"
-                                value="Yes"
-                                checked={answers[activeQuestionGroup.id][idx] === 'Yes'}
-                                onChange={() => answerQuestion('Yes', idx)}
+                {activeQuestionnaireSection.questionGroups.map(
+                    (questionGroup, questionGroupIndex) => (
+                        <li key={questionGroupIndex}>
+                            <QuestionGroup
+                                questionGroup={questionGroup}
+                                responses={responses}
+                                respondToQuestion={respondToQuestion}
                             />
-                            <span className="ml-2">Yes</span>
-                        </label>
-                        <label className="flex items-center">
-                            <input
-                                type="radio"
-                                name={`radio${activeQuestionGroup.id}-${idx}`}
-                                className="form-radio text-teal-400"
-                                value="No"
-                                checked={answers[activeQuestionGroup.id][idx] === 'No'}
-                                onChange={() => answerQuestion('No', idx)}
-                            />
-                            <span className="ml-2">No</span>
-                        </label>
-                    </li>
-                ))}
+                        </li>
+                    )
+                )}
             </ol>
         </>
     );
@@ -180,7 +190,7 @@ const Questionnaire = ({ questionGroups }) => {
                 <h2 className="text-2xl">Reporting Standards</h2>
                 <button
                     type="button"
-                    onClick={() => setActiveQuestionGroup(null)}
+                    onClick={handleClickBack}
                     className="py-2 px-4 text-sm leading-5 font-semibold rounded-md text-white bg-teal-400 focus:outline-none focus:shadow-outline-teal focus:border-teal-500 hover:bg-teal-300 active:bg-teal-500"
                 >
                     Back
