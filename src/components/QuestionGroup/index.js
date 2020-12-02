@@ -57,7 +57,7 @@ const QuestionGroup = ({
                                             type={isMultipleResponsesAllowed ? 'checkbox' : 'radio'}
                                             className={`form-${
                                                 isMultipleResponsesAllowed ? 'checkbox' : 'radio'
-                                            }`}
+                                            } text-teal-400`}
                                             value={responseOptionIndex}
                                             checked={
                                                 responses[id] !== undefined &&
