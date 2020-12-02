@@ -117,6 +117,7 @@ const App = () => {
                         This tool is not appropriate for the study.
                     </p>
                 </div>
+                <div style={{ display: 'none' }} className="form-radio form-checkbox"></div>
             </div>
         </div>
     );
