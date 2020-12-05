@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 import { filterCollection } from '../../util';
-import rootQuestion from '../../data/rootQuestion';
+import configQuestions from '../../data/configQuestions';
 
 const QuestionnaireBuilder = ({ setAnswersToConfigQuestions }) => {
-    const [questions, setQuestions] = useState([rootQuestion]);
+    const [questions, setQuestions] = useState(configQuestions);
 
     const [responses, setResponses] = useState([]);
 
@@ -70,7 +70,9 @@ const QuestionnaireBuilder = ({ setAnswersToConfigQuestions }) => {
                 <h2 className="text-2xl">Study Configuration</h2>
             </div>
             <div className="border-t border-b border-gray-200 px-4 py-5 sm:p-6 h-64">
-                <p className="text-xl mb-2">{currentQuestion.question}</p>
+                <p className="text-xl mb-2">{`${currentQuestion.question}${
+                    currentQuestion.isResponseRequired ? '' : ' (Optional)'
+                }`}</p>
                 <form id="flowchart-form" onSubmit={handleSubmit}>
                     <ul>
                         {currentQuestion.responseOptions.map(

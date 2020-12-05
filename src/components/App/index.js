@@ -9,7 +9,7 @@ import {
     addIdsToQuestionsInQuestionnaireSection,
     questionnaireSectionToBlobData,
 } from '../../util';
-import allQuestionnaireSections from '../../data/questionnaireSections';
+import allQuestionnaireSections from '../../data/questionnaire-sections';
 
 const questionnaireSectionsIndexed = _keyBy(allQuestionnaireSections, 'id');
 

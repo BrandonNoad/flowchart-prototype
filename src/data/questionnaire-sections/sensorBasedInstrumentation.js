@@ -1,0 +1,80 @@
+import { QUESTIONNAIRE_SECTION_ID_SENSOR_BASED_INSTRUMENTATION } from './constants';
+
+export default {
+    id: QUESTIONNAIRE_SECTION_ID_SENSOR_BASED_INSTRUMENTATION,
+    title: 'Other Sensor-Based Instrumentation',
+    questionGroups: [
+        {
+            questions: [
+                {
+                    question:
+                        'Was the placement and orientation of the device and sensor(s) described?',
+                    responseOptions: ['Yes', 'No'],
+                },
+                {
+                    question:
+                        'Were the following aspects of lubrication described (select all that apply)?',
+                    isMultipleResponsesAllowed: true,
+                    responseOptions: [
+                        'Type (e.g., water-based, petroleum-based, etc.)',
+                        'Brand or Manufacturer',
+                        'Concentration',
+                        'Quantity',
+                        'Application process',
+                        'No lubrication or nasal decongestant were utilized.',
+                    ],
+                },
+                {
+                    question:
+                        'Were the following aspects of topical anesthetic described (select all that apply)?',
+                    isMultipleResponsesAllowed: true,
+                    responseOptions: [
+                        'Type (e.g., water-based, petroleum-based, etc.)',
+                        'Brand or Manufacturer',
+                        'Concentration',
+                        'Quantity',
+                        'Application process',
+                        'No topical anesthetic was utilized.',
+                    ],
+                },
+                {
+                    question:
+                        'Were the following aspects of measurement report (select all that apply)?',
+                    isMultipleResponsesAllowed: true,
+                    responseOptions: [
+                        'Signal frequencies',
+                        'Sampling rate',
+                        'Units of measurement',
+                    ],
+                },
+                {
+                    question:
+                        'Was the task performed by the participant during data collection described?',
+                    responseOptions: ['Yes', 'No'],
+                },
+                {
+                    question: 'Were data normalized to a reference value?',
+                    responseOptions: ['Yes', 'No'],
+                },
+                {
+                    question: 'Were signal processing protocols described?',
+                    responseOptions: ['Yes', 'No'],
+                },
+                {
+                    question:
+                        'Were operational definitions stated for every measurement that is recorded?',
+                    responseOptions: ['Yes', 'No'],
+                },
+                {
+                    question: 'Was sensor placement reported as a potential source of error?',
+                    responseOptions: ['Yes', 'No'],
+                },
+                {
+                    question:
+                        'Was there transparent reporting of any artifact or outlier data and how it was handled?',
+                    responseOptions: ['Yes', 'No'],
+                },
+            ],
+        },
+    ],
+};
