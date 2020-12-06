@@ -167,7 +167,7 @@ const Questionnaire = ({ questionnaireSections, responses, setResponses, onClick
 
     const content = (
         <>
-            <h2 className="text-xl font-bold mb-2">{activeQuestionnaireSection.title}</h2>
+            <h3 className="text-xl font-bold mb-2">{activeQuestionnaireSection.title}</h3>
             <ol>
                 {activeQuestionnaireSection.questionGroups.map(
                     (questionGroup, questionGroupIndex) => (

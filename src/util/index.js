@@ -1,6 +1,11 @@
 import _isInteger from 'lodash/isInteger';
 import _intersection from 'lodash/intersection';
 import _difference from 'lodash/difference';
+import _keyBy from 'lodash/keyBy';
+
+import { labels } from '../data/questionnaire-sections';
+
+const labelsIndexed = _keyBy(labels, 'id');
 
 const FILTER_TYPE_SOME = 'some';
 
@@ -111,28 +116,33 @@ const questionGroupsToBlobData = ({
 }) => {
     const indent = new Array(depth * 4).fill(' ').join('');
 
-    return filterCollection(questionGroups, parentQuestionResponses).flatMap(({ questions }) =>
-        questions.flatMap(({ id, question, responseOptions, questionGroups }) => {
-            const responsesForQuestion = (responses[id] ?? [])
-                .map((responseIndex) => responseOptions[responseIndex])
-                .join(', ');
+    return filterCollection(questionGroups, parentQuestionResponses).flatMap(
+        ({ questions, heading }) => [
+            heading ? `### ${heading}\n\n` : '',
+            ...questions.flatMap(({ id, question, labels, responseOptions, questionGroups }) => {
+                const responsesForQuestion = (responses[id] ?? [])
+                    .map((responseIndex) => responseOptions[responseIndex])
+                    .join(', ');
 
-            // In markdown, to force a line return, place two empty spaces at the end of a line.
-            const questionTrailingWhitespace = responsesForQuestion !== '' ? '  ' : '';
+                // In markdown, to force a line return, place two empty spaces at the end of a line.
+                const questionTrailingWhitespace = responsesForQuestion !== '' ? '  ' : '';
 
-            const responseLeadingWhitespace = responsesForQuestion !== '' ? `${indent}  ` : '';
+                const responseLeadingWhitespace = responsesForQuestion !== '' ? `${indent}  ` : '';
 
-            return [
-                `${indent}- ${question}`,
-                `${questionTrailingWhitespace}\n${responseLeadingWhitespace}${responsesForQuestion}\n`,
-                ...questionGroupsToBlobData({
-                    questionGroups: questionGroups ?? [],
-                    responses,
-                    parentQuestionResponses: responses[id] ?? [],
-                    depth: depth + 1,
-                }),
-            ];
-        })
+                return [
+                    `${indent}- ${question}${labels
+                        .map((labelId) => ` [${labelsIndexed[labelId].label}]`)
+                        .join('')}`,
+                    `${questionTrailingWhitespace}\n${responseLeadingWhitespace}${responsesForQuestion}\n`,
+                    ...questionGroupsToBlobData({
+                        questionGroups: questionGroups ?? [],
+                        responses,
+                        parentQuestionResponses: responses[id] ?? [],
+                        depth: depth + 1,
+                    }),
+                ];
+            }),
+        ]
     );
 };
 
